@@ -86,7 +86,27 @@ _Avoid_: Presentation (when meaning powder versus solution)
 **Pack size**:
 An ambiguous source-text term that may mean either Fill Volume or Units per Pack; it is always resolved into one of those and never used on its own.
 
+**NDC Code**:
+The FDA National Drug Code identifying a Product and one of its Presentations; it is the key that joins a catalog line to its FDA master record.
+_Avoid_: Product code (which is the manufacturer's own catalog number)
+
+**Portfolio Catalog**:
+A manufacturer's public listing of the Presentations it sells, the free-text source the portfolio is extracted from.
+_Avoid_: Price list, supply report (when meaning the portfolio)
+
 ### Tenders
+
+**CCSS**:
+Caja Costarricense de Seguro Social, Costa Rica's public health system and the customer whose tenders are the proof of concept.
+_Avoid_: Customer (when the specific institution is meant), Caja
+
+**SICOP**:
+Costa Rica's national public procurement system, where CCSS publishes its tenders and awards.
+_Avoid_: Portal, procurement site
+
+**LOM**:
+Lista Oficial de Medicamentos, the CCSS official list of medicines with the codes and standard descriptions CCSS uses in Tender Lines.
+_Avoid_: Formulary, medicines list
 
 **Tender Document**:
 The file the tender team provides listing a tender's Tender Lines, in whatever form the customer published it (spreadsheet, PDF, or text). The Recommendation is returned as the same Tender Lines with the matching results added.

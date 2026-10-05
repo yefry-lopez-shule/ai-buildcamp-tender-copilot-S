@@ -61,5 +61,46 @@ Injectables and biologics/biosimilars.
 
 ## Data
 
-- **Tenders:** real line-level data from Costa Rica's public health system (CCSS), published openly through the national procurement system. Costa Rica is the proof of concept. The problem itself is general.
-- **Portfolio:** built from scratch using only public sources, namely FDA data (`data/fda-drugs-database/`) and public manufacturer catalogs (`data/pharma-portfolios/`).
+All data comes from public sources. The system uses three kinds of data: the **portfolio** (what the company sells), the **tenders** (what the customer asks for), and **reference knowledge** used to normalize both. A synthetic set with known answers is used for evaluation. Terms in bold follow the glossary in [CONTEXT.md](CONTEXT.md).
+
+### Portfolio
+
+| Source | What it provides | How I get it | Status |
+| --- | --- | --- | --- |
+| Manufacturer catalogs (Baxter, Hikma; Pfizer and Fresenius planned) | The demo company portfolio: one row per **Presentation**, in free text, often with an NDC code | Public PDFs downloaded from each manufacturer's website into `data/pharma-portfolios/<company>/`, then extracted to text | Baxter and Hikma collected. The file in `pfizer/` is a copy of Baxter's report, so Pfizer and Fresenius still need real catalogs |
+| FDA National Drug Code (NDC) directory | The structured master reference. `product.xls` holds one row per **Product** (active ingredients, strength, dosage form, route); `package.xls` holds one row per **Presentation** (container, **Fill Volume**, **Units per Pack**) | Bulk download `ndcxls.zip` from the FDA NDC page, unzipped into `data/fda-drugs-database/db/`. The `.xls` files are tab-separated text | Collected |
+
+Catalog rows are joined to FDA records by NDC code where one is listed. Each catalog record is then checked against an independent structured source, which gives the extraction step a ground truth. Registration status in Costa Rica is not modeled (see [ADR 0001](docs/adr/0001-technical-compliance-only.md)).
+
+### Tenders
+
+| Source | What it provides | How I get it | Status |
+| --- | --- | --- | --- |
+| SICOP, Costa Rica's public procurement system | Real CCSS **Tender Lines** in Spanish free text, plus past awards, which provide the **Historical Awarded Price** | Download published CCSS tenders and award records for injectables and biologics. The target is 3 to 5 tenders, about 200 to 500 lines | To collect. Export formats still to be confirmed |
+| CCSS official medicines list (*Lista Oficial de Medicamentos*) | The codes and standard descriptions CCSS writes tenders in, including Spanish container and route wording such as "frasco ampolla" or "FA" | Public document from CCSS | To collect. Format still to be confirmed |
+
+Tenders arrive as a **Tender Document** (spreadsheet, PDF, or text). Each line is extracted into the same schema as the portfolio.
+
+### Reference knowledge (called as agent tools)
+
+| Source | What it provides | How I get it |
+| --- | --- | --- |
+| RxNorm API (NLM) | Maps a **Reference Brand** to its **Active Principle** (Xylocaine → lidocaine), separates the ingredient with **Salt** from the base, and normalizes dose forms and routes | Free REST API at rxnav.nlm.nih.gov, no key needed |
+| DailyMed API (NLM) | Full label text by NDC: preservative-free, single- or multiple-dose, and "equivalent to X mg base" wording. It fills fields that are **Unknown** in the catalog | Free REST API at dailymed.nlm.nih.gov, no key needed |
+| FDA Purple Book | Biologics with their reference products and **Biosimilars**, which the NDC files do not link | Public download from the FDA Purple Book site |
+
+### Evaluation set (synthetic)
+
+Real tender lines do not come with a correct answer, so I generate labeled **Tender Lines** from real portfolio **Presentations**, each with a known expected **Verdict**. Changes applied:
+
+- Spanish translation and source synonyms ("FA", "intravenoso")
+- A **Reference Brand** instead of the active principle
+- A dropped **Defining Field** (expected: Equivalent)
+- A changed **Salt** or **Container Type** (expected: No Match)
+- Ambiguous "pack size" wording
+
+A few hundred lines are enough to measure accuracy per Verdict and to choose the **Confidence Threshold**. The real SICOP lines are used to check that the system holds up on actual CCSS wording.
+
+### Scope
+
+Injectables and biologics/biosimilars only. Costa Rica is the proof of concept, and the problem itself is general.
