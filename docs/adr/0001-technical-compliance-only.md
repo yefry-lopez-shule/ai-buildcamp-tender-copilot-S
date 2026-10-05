@@ -1,0 +1,3 @@
+# The system judges technical compliance only
+
+The system answers one question per Tender Line: does a Presentation satisfy what the customer requested? Registration status, pricing, and supply are business decisions for the tender team, so they never affect the Verdict or Pharma Interested. We considered blocking unregistered Presentations from Pharma Interested and using Historical Awarded Price as matching evidence. We rejected both because the goal is to remove manual product checking and free the team for competitive pricing, not to make the bid decision for them. Historical Awarded Price is still reported alongside each Verdict as input for that pricing work.

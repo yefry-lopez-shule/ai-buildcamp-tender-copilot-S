@@ -26,9 +26,11 @@ A typical interaction: the user provides a tender (a list of requested product l
 
 5. **Verdict per line:** exact, equivalent, no match, or needs review, each with a reason. A value missing from the catalog (unknown) is treated differently from a requirement missing from the tender (not requested).
 
-6. **Agent for ambiguous cases.** Deterministic matching resolves the easy lines. An agent with tools (search the portfolio, normalize units, get product details, look up historical awarded prices) handles only the ambiguous ones.
+6. **Agent for ambiguous cases.** Deterministic matching resolves the easy lines. An agent with tools (search the portfolio, normalize units, get product details) handles only the ambiguous ones, with a second reviewer agent and, as a last resort, a person.
 
-7. **Tender-level summary:** the share of lines the company could realistically bid on.
+7. **Tender-level summary:** the share of lines the company could bid on, with lines pending human review reported separately.
+
+The system judges technical compliance only. Registration status, pricing, and supply are business decisions left to the tender team. Historical awarded prices are reported next to each verdict as input for pricing and never change the verdict. See [docs/adr/0001-technical-compliance-only.md](docs/adr/0001-technical-compliance-only.md). Domain terms are defined in [CONTEXT.md](CONTEXT.md).
 
 ### Scope
 
@@ -60,4 +62,4 @@ Injectables and biologics/biosimilars.
 ## Data
 
 - **Tenders:** real line-level data from Costa Rica's public health system (CCSS), published openly through the national procurement system. Costa Rica is the proof of concept. The problem itself is general.
-- **Portfolio:** built from scratch using only public sources, namely FDA data (`data/fda-drugs-database/`) and public manufacturer catalogs (`data/pharma-portfolios/`). Registration status in Costa Rica is simulated.
+- **Portfolio:** built from scratch using only public sources, namely FDA data (`data/fda-drugs-database/`) and public manufacturer catalogs (`data/pharma-portfolios/`).
