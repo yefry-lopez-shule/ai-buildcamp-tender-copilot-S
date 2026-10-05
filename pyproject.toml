@@ -1,7 +1,7 @@
 [project]
-name = "ai-buildcamp-project"
+name = "pharma-tender-matcher"
 version = "0.1.0"
-description = "My AI Engineering Buildcamp project"
+description = "Matches pharmaceutical portfolio products to public health tender lines and drafts bid recommendations for human review"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
@@ -12,5 +12,6 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "dirdotenv>=0.0.3",
     "jupyter>=1.1.1",
 ]
